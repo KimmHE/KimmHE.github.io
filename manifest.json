@@ -4,7 +4,7 @@
     "description": "우림 스마트팜 제어 프로그램",
     "scope": "/",
     "start_url": "/",
-    "display": "standalone",//standalone 위에 페이지 수 없게 설정하는것
+    "display": "standalone",
     "orientation": "portrait",
     "icons": [
       {
