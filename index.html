@@ -1,0 +1,103 @@
+<script src="https://code.jquery.com/jquery-latest.min.js"></script>
+<html>
+<head>
+<meta charset="utf-8">
+<title>test<title>
+</head>
+  <body>
+    <div>
+      <button" type="button" id="push-check">🔔온도알람을 사용하기 위해 권한이 필요합니다.</button>
+    </div>
+  </body>
+</html>
+
+<script>
+const publicKey = 'BDenNT3AzlcKu6Jtew61aUHWgjPSHj4xbWukuOJnayWiCxobCNHQ9FMfqtWcxViXf3tQOTLeuMpvRoCpoakpSXM';
+const pushButton = document.getElementById("push-check");
+
+var filter = "win16|win32|win64|mac|macintel"; 
+
+function urlBase64ToUint8Array(base64String) {
+    var padding = '='.repeat((4 - base64String.length % 4) % 4);
+    var base64 = (base64String + padding)
+      .replace(/\-/g, '+')
+      .replace(/_/g, '/');
+
+    var rawData = window.atob(base64);
+    var outputArray = new Uint8Array(rawData.length);
+
+    for (var i = 0; i < rawData.length; ++i) {
+      outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+};
+  
+if ('serviceWorker' in navigator) { 
+	navigator.serviceWorker.register('/sw.js');
+	navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
+		serviceWorkerRegistration.pushManager.getSubscription().then(function(subscription) {
+			  if (subscription) {
+				  pushButton.disabled = true;
+		      pushButton.textContent = "🔔 온도 알람 권한이 허가되었습니다.";
+		      
+		      const subscriptionJson = JSON.parse(JSON.stringify(subscription));
+	        var endpoint = subscriptionJson.endpoint;
+	        var key = subscriptionJson.keys.p256dh;
+	        var auth = subscriptionJson.keys.auth;
+	        console.log(endpoint);console.log(key); console.log(auth);
+	         
+	        document.getElementById('device_token').value=endpoint;
+	        document.getElementById('p256dh').value=key;
+	        document.getElementById('auth').value=auth;
+		  }
+	  }).catch(function(error) {
+		  console.log('Error unsubscribing', error);
+	  });
+	});
+};
+
+	
+pushButton.addEventListener('click', function() {
+	/* if ( navigator.platform ) { 
+	      if ( filter.indexOf( navigator.platform.toLowerCase() ) < 0 ) {  */
+	    	  if(!window.PushManager){
+	    		    alert("Push API 권한 필요");
+	    		}
+	    		if(!window.Notification){
+	    		    alert("Notification 권한 필요");
+	    		}
+	    		if(!navigator.serviceWorker){
+	                alert("Ser권한 필요");
+	            }
+	    	  if (navigator.serviceWorker && window.PushManager && window.Notification) {
+ 
+	    	      navigator.serviceWorker.getRegistration().then(function(registration) {
+	    	        registration.pushManager.subscribe(
+	    	            { userVisibleOnly: true,
+	    	              applicationServerKey:urlBase64ToUint8Array(publicKey), 
+	    	            }).then(function(subscription) {
+	    	                const subscriptionJson = JSON.parse(JSON.stringify(subscription));
+	    	                var endpoint = subscriptionJson.endpoint;
+	    	                var key = subscriptionJson.keys.p256dh;
+	    	                var auth = subscriptionJson.keys.auth;
+
+	    	                document.getElementById('device_token').value=endpoint;
+	    	                document.getElementById('p256dh').value=key;
+	    	                document.getElementById('auth').value=auth;
+	    	                
+
+	    	                pushButton.disabled = true;
+	    	                pushButton.textContent = "🔔 온도 알람 권한이 허가되었습니다.";
+	    	        }).catch(function(error) {
+	    	          console.log('Error:', error);
+	    	        });
+	    	      });
+	    	    }else {
+	    	      alert("오류: 온도 알람을 사용할 수 없습니다.");
+	    	    }
+	      }else {
+              alert("오류: PC에서는 온도 알람을 사용할 수 없습니다.");
+         } 
+	}
+  }); 
+</script>
