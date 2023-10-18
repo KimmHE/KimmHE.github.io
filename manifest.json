@@ -1,6 +1,6 @@
 {
-    "name": "우림 스마트팜",
-    "short_name": "우림 스마트팜",
+    "name": "우림 스마트팜 프로그램",
+    "short_name": "우림 스마트팜 프로그램",
     "description": "우림 스마트팜 제어 프로그램",
     "scope": "/",
     "start_url": "/",
