@@ -59,8 +59,8 @@ if ('serviceWorker' in navigator) {
 
 	
 pushButton.addEventListener('click', function() {
-	/* if ( navigator.platform ) { 
-	      if ( filter.indexOf( navigator.platform.toLowerCase() ) < 0 ) {  */
+	 if ( navigator.platform ) { 
+	      if ( filter.indexOf( navigator.platform.toLowerCase() ) < 0 ) {
 	    	  if(!window.PushManager){
 	    		    alert("Push API 권한 필요");
 	    		}
